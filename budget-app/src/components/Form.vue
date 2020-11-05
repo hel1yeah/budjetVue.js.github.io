@@ -1,26 +1,26 @@
 <template>
-  <el-card class="form-card">
-    <el-form :model="formData"> 
-    <el-form-item lable="Type" prop="type">
-      <el-select class="type-select" v-model="formData.type" placeholder="Choos type ...">
-        <el-option label="Income" value="INCOME" />
-        <el-option label="Outcome" value="OUTCOME" />
-      </el-select>
-    </el-form-item>
-    <el-form-item lable="Comments" prop="comment">
-      <el-input v-model="formData.comment" />
-    </el-form-item>
-    <el-form-item lable="Value" prop="value">
-      <el-input v-model.number="formData.value" />
-    </el-form-item>
-    <el-button @click="onSubmit" type="primary">Submit</el-button>
-    </el-form>
-  </el-card>
+  <ElCard class="form-card">
+    <ElForm :model="formData" ref="addItemForm" :rules="rules" lable-position="top">
+      <ElFormItem label="Type" prop="type">
+        <ElSelect class="type-select" v-model="formData.type" placeholder="Choose type...">
+          <ElOption lable="Income" value="INCOME" />
+          <ElOption lable="Outcome" value="OUTCOME" />
+        </ElSelect>
+      </ElFormItem>
+      <ElFormItem label="Comments" prop="comment">
+        <ElInput v-model="formData.comment" />
+      </ElFormItem>
+      <ElFormItem label="Value" prop="value">
+        <ElInput v-model.number="formData.value" />
+      </ElFormItem>
+      <ElButton @click="onSubmit" type="primary">Submit</ElButton>
+    </ElForm>
+  </ElCard>
 </template>
 
 <script>
 export default {
-  name: 'Form',
+  name: "Form",
   data() {
     return {
       formData: {
@@ -28,22 +28,39 @@ export default {
         comment: "",
         value: 0,
       },
+    rules: {
+      type: [
+        { required: true, message: "Please select type", trigger: "blur" }
+      ],
+      comment: [
+        { required: true, message: "Please input comment", trigger: "change" }
+      ],
+      value: [
+        { required: true, message: "Please input value", trigger: "change" },
+        { type: "number", message: "Value must be a number", trigger: "change" }
+      ]
+    }
     };
   },
   methods: {
-    onSubmit(){
-
-    }
+    onSubmit() {
+      this.$refs.addItemForm.validate((valid)=> {
+        if (valid) {
+          this.$emit('submitForm', {...this.formData});
+          this.$refs.addItemForm.resetFields();
+        }
+      })
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-.form-card{
+.form-card {
   max-width: 500px;
   margin: auto;
 }
-.type-select{
+.type-select {
   width: 100%;
 }
 </style>
