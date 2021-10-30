@@ -46,13 +46,13 @@ export default {
     onDeleteItem(id) {
       this.$delete(this.list, id);
     },
-    onFormSubmit(data){
+    onFormSubmit(data) {
       const newObject = {
         ...data,
-        id: String(Math.random())
+        id: String(Math.random()),
       };
       this.$set(this.list, newObject.id, newObject);
-    }
+    },
   },
 };
 </script>
